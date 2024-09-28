@@ -2,19 +2,19 @@ import { useState } from "react";
 const initialFriendList = [
   {
     name: "Anthony",
-    imgaeUrl: "https://i.pravatar.cc/48?u=499476",
+    imageUrl: "https://i.pravatar.cc/48?u=499476",
     balance: 4,
     id: 1,
   },
   {
     name: "Pop",
-    imgaeUrl: "https://i.pravatar.cc/48?u=499422",
+    imageUrl: "https://i.pravatar.cc/48?u=499422",
     balance: -4,
     id: 2,
   },
   {
     name: "Mike",
-    imgaeUrl: "https://i.pravatar.cc/48?u=1921156",
+    imageUrl: "https://i.pravatar.cc/48?u=1921156",
     balance: 0,
     id: 3,
   },
@@ -24,10 +24,16 @@ export default function App() {
   const [friends, setFriends] = useState(initialFriendList);
   const [active, setActive] = useState("");
   function selectHandler(id) {
-    console.log(id);
-
     if (id === active) setActive("");
     else setActive(id);
+  }
+  function AddFriendHandler(e, name, imageUrl) {
+    e.preventDefault();
+    if (!(name && imageUrl)) return;
+    const newFriend = { name, imageUrl, id: friends.length + 2, balance: 0 };
+    console.log(newFriend);
+
+    setFriends((e) => [...e, newFriend]);
   }
   return (
     <div className="app">
@@ -35,6 +41,7 @@ export default function App() {
         friends={friends}
         active={active}
         selectHandler={selectHandler}
+        AddFriendHandler={AddFriendHandler}
       />
       {active > 0 && (
         <SplitBillForm name={friends.find((el) => el.id === active).name} />
@@ -42,7 +49,7 @@ export default function App() {
     </div>
   );
 }
-function SideBar({ friends, active, selectHandler }) {
+function SideBar({ friends, active, selectHandler, AddFriendHandler }) {
   const [AddFriendFormState, setAddFriendForm] = useState(false);
 
   return (
@@ -50,7 +57,7 @@ function SideBar({ friends, active, selectHandler }) {
       <ul>
         {friends.map((el, i) => (
           <FriendList
-            image={el.imgaeUrl}
+            image={el.imageUrl}
             name={el.name}
             balance={el.balance}
             key={i}
@@ -60,7 +67,12 @@ function SideBar({ friends, active, selectHandler }) {
           />
         ))}
       </ul>
-      {AddFriendFormState && <AddFriendForm />}
+      {AddFriendFormState && (
+        <AddFriendForm
+          AddFriendHandler={AddFriendHandler}
+          setAddFriendForm={setAddFriendForm}
+        />
+      )}
       <Button onClickHandler={() => setAddFriendForm((s) => !s)}>
         {AddFriendFormState ? "close" : "Add friend"}
       </Button>
@@ -85,13 +97,31 @@ export function FriendList({ image, balance, name, id, state, selectHandler }) {
     </li>
   );
 }
-function AddFriendForm() {
+function AddFriendForm({ AddFriendHandler, setAddFriendForm }) {
+  const [name, setName] = useState("");
+  const [URL, setURL] = useState("https://i.pravatar.cc/48");
   return (
-    <form className="form-add-friend">
+    <form
+      className="form-add-friend"
+      onSubmit={(e) => {
+        AddFriendHandler(e, name, URL);
+        if (name) setAddFriendForm(false);
+      }}
+    >
       <label htmlFor="friendName">👫 Friend name</label>
-      <input type="text" id="friendName" />
+      <input
+        type="text"
+        id="friendName"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
       <label htmlFor="Image">🌄 Image URL</label>
-      <input type="text" id="Image" value="https://i.pravatar.cc/48" />
+      <input
+        type="text"
+        id="Image"
+        value={URL}
+        onChange={(e) => setURL(e.target.value)}
+      />
       <Button>Add</Button>
     </form>
   );
