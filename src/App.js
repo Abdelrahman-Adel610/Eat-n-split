@@ -4,30 +4,47 @@ const initialFriendList = [
     name: "Anthony",
     imgaeUrl: "https://i.pravatar.cc/48?u=499476",
     balance: 4,
+    id: 1,
   },
   {
     name: "Pop",
     imgaeUrl: "https://i.pravatar.cc/48?u=499422",
     balance: -4,
+    id: 2,
   },
   {
     name: "Mike",
     imgaeUrl: "https://i.pravatar.cc/48?u=1921156",
     balance: 0,
+    id: 3,
   },
 ];
 
 export default function App() {
   const [friends, setFriends] = useState(initialFriendList);
+  const [active, setActive] = useState("");
+  function selectHandler(id) {
+    console.log(id);
+
+    if (id === active) setActive("");
+    else setActive(id);
+  }
   return (
     <div className="app">
-      <SideBar friends={friends} />
-      <SplitBillForm />
+      <SideBar
+        friends={friends}
+        active={active}
+        selectHandler={selectHandler}
+      />
+      {active > 0 && (
+        <SplitBillForm name={friends.find((el) => el.id === active).name} />
+      )}
     </div>
   );
 }
-function SideBar({ friends }) {
+function SideBar({ friends, active, selectHandler }) {
   const [AddFriendFormState, setAddFriendForm] = useState(false);
+
   return (
     <div className="sidebar">
       <ul>
@@ -37,6 +54,9 @@ function SideBar({ friends }) {
             name={el.name}
             balance={el.balance}
             key={i}
+            id={el.id}
+            state={el.id === active}
+            selectHandler={selectHandler}
           />
         ))}
       </ul>
@@ -47,10 +67,9 @@ function SideBar({ friends }) {
     </div>
   );
 }
-export function FriendList({ image, balance, name }) {
-  // const [addFriend]
+export function FriendList({ image, balance, name, id, state, selectHandler }) {
   return (
-    <li>
+    <li className={state ? "selected" : ""}>
       <img src={image} alt={name} />
       <h3>{name}</h3>
       <p className={balance === 0 ? "" : balance > 0 ? "red" : "green"}>
@@ -60,7 +79,9 @@ export function FriendList({ image, balance, name }) {
           ? `You owe ${name} ${balance}€`
           : `${name} owes you ${-1 * balance}€`}
       </p>
-      <Button>Select</Button>
+      <Button onClickHandler={() => selectHandler(id)}>
+        {state ? "close" : "select"}
+      </Button>
     </li>
   );
 }
@@ -82,15 +103,15 @@ function Button({ children, onClickHandler }) {
     </button>
   );
 }
-function SplitBillForm() {
+function SplitBillForm({ name }) {
   return (
     <form className="form-split-bill">
-      <h2>Split a bill with Clark</h2>
+      <h2>Split a bill with {name}</h2>
       <label htmlFor="value">💰 Bill value</label>
       <input type="text" id="value" />
       <label htmlFor="YourExpense">🧍‍♀️ Your expense</label>
       <input type="text" id="YourExpense" />
-      <label htmlFor="FriendExpense">👫 Friend's expense</label>
+      <label htmlFor="FriendExpense">👫 {name}'s expense</label>
       <input type="text" id="FriendExpense" disabled />
       <label htmlFor="pay">🤑 Who is paying the bill</label>
       <select id="pay">
@@ -98,7 +119,7 @@ function SplitBillForm() {
           you
         </option>
         <option value="Friend" key="2">
-          Friend
+          {name}
         </option>
       </select>
       <Button>Split bill</Button>
