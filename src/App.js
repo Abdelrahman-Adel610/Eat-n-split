@@ -27,6 +27,7 @@ export default function App() {
   );
 }
 function SideBar({ friends }) {
+  const [AddFriendFormState, setAddFriendForm] = useState(false);
   return (
     <div className="sidebar">
       <ul>
@@ -34,8 +35,10 @@ function SideBar({ friends }) {
           <FriendList image={el.imgaeUrl} name={el.name} balance={el.balance} />
         ))}
       </ul>
-      <AddFriendForm />
-      <Button>Add friend</Button>
+      {AddFriendFormState && <AddFriendForm />}
+      <Button onClickHandler={() => setAddFriendForm((s) => !s)}>
+        {AddFriendFormState ? "close" : "Add friend"}
+      </Button>
     </div>
   );
 }
@@ -56,13 +59,17 @@ function AddFriendForm() {
       <label for="friendName">👫 Friend name</label>
       <input type="text" id="friendName" />
       <label for="Image">🌄 Image URL</label>
-      <input type="text" id="Image" />
+      <input type="text" id="Image" value="https://i.pravatar.cc/48" />
       <Button>Add</Button>
     </form>
   );
 }
 function Button({ children, onClickHandler }) {
-  return <button className="button">{children}</button>;
+  return (
+    <button className="button" onClick={onClickHandler}>
+      {children}
+    </button>
+  );
 }
 function SplitBillForm() {
   return (
