@@ -20,10 +20,10 @@ const initialFriendList = [
 export default function App() {
   const [friends, setFriends] = useState(initialFriendList);
   return (
-    <di className="app">
+    <div className="app">
       <SideBar friends={friends} />
       <SplitBillForm />
-    </di>
+    </div>
   );
 }
 function SideBar({ friends }) {
@@ -31,8 +31,13 @@ function SideBar({ friends }) {
   return (
     <div className="sidebar">
       <ul>
-        {friends.map((el) => (
-          <FriendList image={el.imgaeUrl} name={el.name} balance={el.balance} />
+        {friends.map((el, i) => (
+          <FriendList
+            image={el.imgaeUrl}
+            name={el.name}
+            balance={el.balance}
+            key={i}
+          />
         ))}
       </ul>
       {AddFriendFormState && <AddFriendForm />}
@@ -48,7 +53,13 @@ export function FriendList({ image, balance, name }) {
     <li>
       <img src={image} alt={name} />
       <h3>{name}</h3>
-      <p className="green">name owes you 10€</p>
+      <p className={balance === 0 ? "" : balance > 0 ? "red" : "green"}>
+        {balance === 0
+          ? `You and ${name} are even`
+          : balance > 0
+          ? `You owe ${name} ${balance}€`
+          : `${name} owes you ${-1 * balance}€`}
+      </p>
       <Button>Select</Button>
     </li>
   );
@@ -56,9 +67,9 @@ export function FriendList({ image, balance, name }) {
 function AddFriendForm() {
   return (
     <form className="form-add-friend">
-      <label for="friendName">👫 Friend name</label>
+      <label htmlFor="friendName">👫 Friend name</label>
       <input type="text" id="friendName" />
-      <label for="Image">🌄 Image URL</label>
+      <label htmlFor="Image">🌄 Image URL</label>
       <input type="text" id="Image" value="https://i.pravatar.cc/48" />
       <Button>Add</Button>
     </form>
@@ -75,13 +86,13 @@ function SplitBillForm() {
   return (
     <form className="form-split-bill">
       <h2>Split a bill with Clark</h2>
-      <label for="value">💰 Bill value</label>
+      <label htmlFor="value">💰 Bill value</label>
       <input type="text" id="value" />
-      <label for="YourExpense">🧍‍♀️ Your expense</label>
+      <label htmlFor="YourExpense">🧍‍♀️ Your expense</label>
       <input type="text" id="YourExpense" />
-      <label for="FriendExpense">👫 Friend's expense</label>
+      <label htmlFor="FriendExpense">👫 Friend's expense</label>
       <input type="text" id="FriendExpense" disabled />
-      <label for="pay">🤑 Who is paying the bill</label>
+      <label htmlFor="pay">🤑 Who is paying the bill</label>
       <select id="pay">
         <option value="you" key="1">
           you
