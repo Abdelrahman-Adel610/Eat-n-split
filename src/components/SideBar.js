@@ -1,10 +1,15 @@
-import { useState } from "react";
-import { AddFriendForm, Button } from "./Button";
+import { Button } from "./Button";
+import { AddFriendForm } from "./AddFriendForm";
 import { FriendList } from "./FriendList";
 
-export function SideBar({ friends, active, selectHandler, AddFriendHandler }) {
-  const [AddFriendFormState, setAddFriendForm] = useState(false);
-
+export function SideBar({
+  friends,
+  active,
+  selectHandler,
+  AddFriendHandler,
+  AddFriendFormState,
+  setAddFriendForm,
+}) {
   return (
     <div className="sidebar">
       <ul>

@@ -23,11 +23,15 @@ const initialFriendList = [
 ];
 
 export default function App() {
+  const [AddFriendFormState, setAddFriendForm] = useState(false);
   const [friends, setFriends] = useState(initialFriendList);
   const [active, setActive] = useState("");
   function selectHandler(id) {
     if (id === active) setActive("");
-    else setActive(id);
+    else {
+      setActive(id);
+      setAddFriendForm(false);
+    }
   }
   function AddFriendHandler(e, name, imageUrl) {
     e.preventDefault();
@@ -44,6 +48,8 @@ export default function App() {
         active={active}
         selectHandler={selectHandler}
         AddFriendHandler={AddFriendHandler}
+        AddFriendFormState={AddFriendFormState}
+        setAddFriendForm={setAddFriendForm}
       />
       {active > 0 && (
         <SplitBillForm
