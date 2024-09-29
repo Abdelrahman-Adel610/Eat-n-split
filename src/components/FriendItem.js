@@ -1,6 +1,6 @@
 import { Button } from "./Button";
 
-export function FriendList({ image, balance, name, id, state, selectHandler }) {
+export function FriendItem({ image, balance, name, id, state, selectHandler }) {
   return (
     <li className={state ? "selected" : ""}>
       <img src={image} alt={name} />

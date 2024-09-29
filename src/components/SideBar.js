@@ -1,6 +1,6 @@
 import { Button } from "./Button";
 import { AddFriendForm } from "./AddFriendForm";
-import { FriendList } from "./FriendList";
+import { FriendItem } from "./FriendItem";
 
 export function SideBar({
   friends,
@@ -14,7 +14,7 @@ export function SideBar({
     <div className="sidebar">
       <ul>
         {friends.map((el, i) => (
-          <FriendList
+          <FriendItem
             image={el.imageUrl}
             name={el.name}
             balance={el.balance}
