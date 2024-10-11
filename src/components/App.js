@@ -53,6 +53,7 @@ export default function App() {
       />
       {active > 0 && (
         <SplitBillForm
+          key={active}
           friend={friends.find((el) => el.id === active)}
           setFriends={setFriends}
           selectHandler={selectHandler}
